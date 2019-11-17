@@ -1,4 +1,4 @@
-#pragma onece
+#pragma once
 #include"pin.h"
 
 class ultraSonicSensor{
@@ -6,5 +6,5 @@ class ultraSonicSensor{
 		int echo,triger;
 	public:
 		ultraSonicSensor(int echoPin, int trigerPin);
-		float getDistance();
+		double getDistance();
 };

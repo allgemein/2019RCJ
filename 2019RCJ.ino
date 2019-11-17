@@ -1,31 +1,37 @@
 #include"pin.h"
 #include"setup.h"
-#include"DCMotorControl.h"
-
+#include"ultraSonicSensor.h"
+#include"lineTrace.h"
+#include"constant.h"
 void setup(){
 	Serial.begin(9600);
-	pinModeAll();
 }
 
-DCMotorControl mymotor(motorL1,motorL2,motorR1,motorR2);
+ultraSonicSensor usR(echoR,trigR);
+ultraSonicSensor usL(echoL,trigL);
+ultraSonicSensor usF(echoF,trigF);
+lineTrace tracer(500,150,0.05,0.02,0.02);
 
 void loop(){
-	mymotor.move(255,255);
+	switch (judgePhase()){
+		case rescue:
+			tracer.rescue();
+			break;
+		case rightangleR:
+			tracer.rightangle();
+			break;
+		case rightangleL:
+			tracer.rightangle();
+			break;
+		case obstacle:
+			tracer.obstacle();
+			break;
+		case white:
+			tracer.searchLine();
+			break;
+		default:
+			tracer.pid();
+			break;
+		}
 	} 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

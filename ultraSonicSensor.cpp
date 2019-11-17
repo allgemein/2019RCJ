@@ -1,6 +1,6 @@
 #include<Arduino.h>
 #include"pin.h"
-#include"getDistance.h"
+#include"ultraSonicSensor.h"
 
 ultraSonicSensor::ultraSonicSensor(int echoPin, int trigerPin){
 	echo = echoPin;
@@ -17,7 +17,7 @@ double ultraSonicSensor::getDistance(){
 	digitalWrite(triger,HIGH);
 	delayMicroseconds(10);
 	digitalWrite(triger,LOW);
-	dur=pulseIn(echo,HIGH);
-	distance=(duration*340*100)/2000000;
+	duration=pulseIn(echo,HIGH);
+	distance=(duration*340*100)/2000000.0;
 	return distance;
 }

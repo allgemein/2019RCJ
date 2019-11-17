@@ -2,15 +2,7 @@
 #include<Arduino.h>
 #include"DCMotorControl.h"
 
-DCMotorControl::DCMotorControl(int normalPinL,int reversePinL, int normalPinR, int reversePinR){
-	this->normalPinL = normalPinL;
-	this->reversePinL = reversePinL;
-	this->normalPinR = normalPinR;
-	this->reversePinR = reversePinR;
-}
-
-
-void DCMotorControl::move(int powerL, int powerR){
+void move(int powerL, int powerR){
 
 	if(powerL>255) powerL=255;
 	if(powerL<-255) powerL=-255;

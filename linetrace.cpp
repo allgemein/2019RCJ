@@ -2,10 +2,11 @@
 #include"pin.h"
 #include"DCMotorControl.h"
 #include"lineTrace.h"
+#include"constant.h"
 
-lineTrace::lineTrace(int basicMotorPower,int limen,double Kp,double Ki,double Kd){
-	this->basicMotorPower = basicMotorPower;
-	this->limen = limen;AD0
+lineTrace::lineTrace(int limen,int basicMotorPower,double Kp,double Ki,double Kd){
+	this->limen = limen;
+	this->basicMotorPower = basicMotorPower;;
 	this->Kp = Kp;
 	this->Ki = Ki;
 	this->Kd = Kd;
@@ -25,8 +26,6 @@ void lineTrace::pid(){
 
 	Lpower = basicMotorPower+(propotial+integral+differential);
 	Rpower = basicMotorPower-(propotial+integral+differential);
-
-	motor.move(Lpower,Rpower);
 
 	previous_diff2 = previous_diff;
 	previous_diff = diff;
