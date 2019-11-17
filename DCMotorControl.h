@@ -1,4 +1,4 @@
 #pragma once
 #include<Arduino.h>
 
-void move(int powerL, int powerR);
+void MOVE(int powerL, int powerR);
