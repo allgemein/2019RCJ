@@ -1,7 +1,8 @@
 #pragma once
-#include"DCMotorControl.h"
-#include"lineTrace.h"
+#include<Arduino.h>
+#include"pin.h"
 #include"constant.h"
+#include"DCMotorControl.h"
 
 class lineTrace{
 	private:

@@ -1,4 +1,6 @@
 #pragma once
+
+//caseを文字で記述するためのenumを定義
 enum phase{
 	rescue,
 	rightangleR,
@@ -6,4 +8,4 @@ enum phase{
 	obstacle,
 	white,
 	lineTrace
-}
+};

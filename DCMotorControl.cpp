@@ -2,8 +2,10 @@
 #include<Arduino.h>
 #include"DCMotorControl.h"
 
+//モータを簡単に動かすための関数
 void move(int powerL, int powerR){
 
+	//もし引数が想定範囲をオーバーしていたら255,-255に丸める
 	if(powerL>255) powerL=255;
 	if(powerL<-255) powerL=-255;
 	if(powerR>255) powerR=255;

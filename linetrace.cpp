@@ -1,12 +1,8 @@
-#include<Arduino.h>
-#include"pin.h"
-#include"DCMotorControl.h"
 #include"lineTrace.h"
-#include"constant.h"
 
 lineTrace::lineTrace(int limen,int basicMotorPower,double Kp,double Ki,double Kd){
-	this->limen = limen;
-	this->basicMotorPower = basicMotorPower;;
+	this->limen =limen;
+	this->basicMotorPower = basicMotorPower;
 	this->Kp = Kp;
 	this->Ki = Ki;
 	this->Kd = Kd;
@@ -33,6 +29,6 @@ void lineTrace::pid(){
 	sprintf(str,"power: %4d%4d",Lpower,Rpower);
 
 	Serial.println(str);
-	
+
 	delay(5);
 }
