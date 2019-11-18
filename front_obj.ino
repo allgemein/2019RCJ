@@ -1,5 +1,5 @@
 #include "pin.h"
-#include "getDistance.h"
+#include "ultraSonicSensor.h"
 #include "linetrace.h"
 ///正面に障害物が来たら止まるプログラム
 ultraSonicSensor usF(echoF,trigerF); //前の値を返すコマンドを指定する
