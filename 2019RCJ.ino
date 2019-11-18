@@ -34,13 +34,13 @@ void loop(){
 			tracer.rescue();
 			break;
 		case rightangleR:
-			tracer.rightangle();
+			tracer.rightangleBasedOnLine();
 			break;
 		case rightangleL:
-			tracer.rightangle();
+			tracer.rightangleBasedOnLine();
 			break;
 		case obstacle:
-			tracer.obstacle();
+			tracer.dodge_movement();;
 			break;
 		case white:
 			tracer.searchLine();

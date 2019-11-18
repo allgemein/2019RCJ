@@ -1,5 +1,44 @@
 #include"lineTrace.h"
 
+void lineTrace::turnToFindObstacle(ultraSonicSensor us,enum direction direction){
+	double Dis = us.getDistance();
+	while(Dis > 13 || Dis < 7){
+		switch(direction){
+			case R:
+				move(50, -50);
+				break;
+			case L:
+				move(-50,50);
+				break;
+		}
+		delay(5);
+		Dis = us.getDistance();
+	}
+}
+
+void lineTrace::dodge_movement(usL,usF,usR){
+
+	turnToFindObstacle(usL,R);
+
+	while(!(analogRead(phtRl)<limen && analogRead(phtLr)<limen)){
+		double disL = usL.getDistance();
+		if(disL<=13 && disL>=7){
+			MOVE(50,50);
+			delay(5);
+		}else{
+			turnToFindObstacle(usL,L);
+		}
+	}
+
+	while(analogRead(phtRl)<limen && analogRead(phtLr)<limen){
+		MOVE(50,50);
+		delay(5);
+	}
+
+	rightangleBasedOnLine(R);
+
+}
+
 //コンストラクタの定義
 lineTrace::lineTrace(int limen0,int basicMotorPower0,double Kp0,double Ki0,double Kd0):limen(limen0),basicMotorPower(basicMotorPower0),Kp(Kp0),Ki(Ki0),Kd(Kd0){
 }

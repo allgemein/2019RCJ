@@ -9,3 +9,8 @@ enum phase{
 	white,
 	lineTrace
 };
+
+enum direction{
+	R,
+	L
+};
