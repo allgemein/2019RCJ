@@ -7,10 +7,13 @@ enum phase{
 	rightangleL,
 	obstacle,
 	white,
-	lineTrace
+	Trace,
+	passOver
 };
 
 enum direction{
 	R,
-	L
+	L,
+	bothSides,
+	nothing
 };

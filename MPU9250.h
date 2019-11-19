@@ -1,3 +1,4 @@
+#pragma once
 #include <Wire.h>
 
 #define MPU9250_ADDRESS 0x68

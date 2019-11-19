@@ -5,10 +5,10 @@ void lineTrace::turnToFindObstacle(ultraSonicSensor us,enum direction direction)
 	while(Dis > 13 || Dis < 7){
 		switch(direction){
 			case R:
-				move(50, -50);
+				MOVE(50, -50);
 				break;
 			case L:
-				move(-50,50);
+				MOVE(-50,50);
 				break;
 		}
 		delay(5);
@@ -16,7 +16,7 @@ void lineTrace::turnToFindObstacle(ultraSonicSensor us,enum direction direction)
 	}
 }
 
-void lineTrace::dodge_movement(usL,usF,usR){
+void lineTrace::dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
 
 	turnToFindObstacle(usL,R);
 
@@ -79,4 +79,50 @@ void lineTrace::pid(){
 	Serial.println(str);
 
 	delay(5);
+}
+
+enum phase lineTrace::judgePhase(ultraSonicSensor usF){
+
+	int valLl = analogRead(phtLl);
+	int valLr = analogRead(phtLr);
+	int valC = analogRead(phtC);
+	int valRl = analogRead(phtRl);
+	int valRr = analogRead(phtRr);
+	double Dis = usF.getDistance();
+
+	if((valLl<limen && valLr<limen)||(valRl<limen && valRr<limen)){
+
+		direction greenPosition = checkGreen();
+
+		if(greenPosition==R){
+			return rightangleR;
+		}else if(greenPosition==L){
+			return rightangleL;
+		}else if(greenPosition==bothSides){
+			return rightangleR;
+		}else{
+			if(varC<limen){
+				return passOver;
+			}else{
+				if(valRl<limen&&valRr<limen){
+					return rightangleR;
+				}else{
+					return rightangleL;
+			}
+		}
+	}
+
+	}else if(dis<=13 && dis>=7){
+
+		return obstacle;
+
+	}else if(valLl>=limen && valLr>=limen && valC>=limen && valRl>=limen && valRr>=limen){
+
+		return white;
+
+	}else {
+
+		return Trace;
+
+	}
 }
