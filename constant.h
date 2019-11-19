@@ -2,7 +2,7 @@
 
 //caseを文字で記述するためのenumを定義
 enum phase{
-	rescue,
+	startRescue,
 	rightangleR,
 	rightangleL,
 	obstacle,

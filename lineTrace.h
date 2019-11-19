@@ -4,19 +4,17 @@
 #include"constant.h"
 #include"DCMotorControl.h"
 #include"ultraSonicSensor.h"
+#include"TCS34725.h"
 
-class lineTrace{
-	private:
-		int limen,basicMotorPower;
-		double Kp,Ki,Kd;
-		void turnToFindObstacle(ultraSonicSensor us,enum direction direction);
-		void crossing();
-
-	public:
-		lineTrace(int limen0,int basicMotorPower0,double Kp0,double Ki0,double Kd0);
-		void pid();
-		enum phase judgePhase(ultraSonicSensor usF);
-		void rightangleBasedOnLine(enum direction direction);
-		void dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR);
-		void searchLine();
-};
+const int limen = 0;
+const int basicMotorPower = 0;
+const double Kp = 0;
+const int Ki = 0;
+const int Kd = 0;
+void turnToFindObstacle(ultraSonicSensor us,enum direction direction);
+void crossing();
+void pid();
+enum phase judgePhase(ultraSonicSensor usF);
+void rightangleBasedOnLine(enum direction direction);
+void dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR);
+void searchLine();

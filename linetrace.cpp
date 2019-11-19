@@ -1,8 +1,8 @@
 #include"lineTrace.h"
 
-void lineTrace::turnToFindObstacle(ultraSonicSensor us,enum direction direction){
-	double Dis = us.getDistance();
-	while(Dis > 13 || Dis < 7){
+void turnToFindObstacle(ultraSonicSensor us,enum direction direction){
+	double dis = us.getDistance();
+	while(dis > 13 || dis < 7){
 		switch(direction){
 			case R:
 				MOVE(50, -50);
@@ -12,11 +12,11 @@ void lineTrace::turnToFindObstacle(ultraSonicSensor us,enum direction direction)
 				break;
 		}
 		delay(5);
-		Dis = us.getDistance();
+		dis = us.getDistance();
 	}
 }
 
-void lineTrace::dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
+void dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
 
 	turnToFindObstacle(usL,R);
 
@@ -39,14 +39,10 @@ void lineTrace::dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSo
 
 }
 
-//コンストラクタの定義
-lineTrace::lineTrace(int limen0,int basicMotorPower0,double Kp0,double Ki0,double Kd0):limen(limen0),basicMotorPower(basicMotorPower0),Kp(Kp0),Ki(Ki0),Kd(Kd0){
-}
-
 /*pid制御によるライントレース関数
  * ラインを挟んだ二つのフォトリフレクタの読み取り値同士の差が0であるときをラインが機体中央にあるときと想定し、差(diff)=0を目標値としてpid制御を行う*/
 
-void lineTrace::pid(){
+void pid(){
 	int diff,propotial,integral,differential,Lpower,Rpower;
 	char str[254];
 	static int previous_diff = 0;
@@ -81,14 +77,14 @@ void lineTrace::pid(){
 	delay(5);
 }
 
-enum phase lineTrace::judgePhase(ultraSonicSensor usF){
+enum phase judgePhase(ultraSonicSensor usF){
 
 	int valLl = analogRead(phtLl);
 	int valLr = analogRead(phtLr);
 	int valC = analogRead(phtC);
 	int valRl = analogRead(phtRl);
 	int valRr = analogRead(phtRr);
-	double Dis = usF.getDistance();
+	double dis = usF.getDistance();
 
 	if((valLl<limen && valLr<limen)||(valRl<limen && valRr<limen)){
 
@@ -101,7 +97,7 @@ enum phase lineTrace::judgePhase(ultraSonicSensor usF){
 		}else if(greenPosition==bothSides){
 			return rightangleR;
 		}else{
-			if(varC<limen){
+			if(valC<limen){
 				return passOver;
 			}else{
 				if(valRl<limen&&valRr<limen){
@@ -125,4 +121,7 @@ enum phase lineTrace::judgePhase(ultraSonicSensor usF){
 		return Trace;
 
 	}
+}
+
+void searchLine(){
 }
