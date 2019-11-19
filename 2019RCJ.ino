@@ -39,6 +39,8 @@ void loop(){
 		case rightangleL:
 			rightangleBasedOnLine(L);
 			break;
+		case passOver:
+			passOverLine();
 		case obstacle:
 			dodge_movement(usR,usF,usL);
 			break;

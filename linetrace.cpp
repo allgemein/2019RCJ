@@ -1,8 +1,12 @@
 #include"lineTrace.h"
 
+//超音波センサのオブジェクトと旋回の方向を引数に取った関数。その超音波センサが適切な値を読み取るまで指定した方向へ旋回し続ける
 void turnToFindObstacle(ultraSonicSensor us,enum direction direction){
+	//超音波センサの値を取って距離を初期化
 	double dis = us.getDistance();
+	//超音波センサの値が一定範囲内でないあいだずっと
 	while(dis > 13 || dis < 7){
+		//directionに応じた方向に旋回する
 		switch(direction){
 			case R:
 				MOVE(50, -50);
@@ -10,17 +14,24 @@ void turnToFindObstacle(ultraSonicSensor us,enum direction direction){
 			case L:
 				MOVE(-50,50);
 				break;
+			default:
+				break;
 		}
 		delay(5);
+		//距離を更新
 		dis = us.getDistance();
 	}
 }
 
+//障害物回避関数.超音波センサのオブジェクトを引数にとる
 void dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
 
+	//左側に障害物が見つかるまで右へ旋回
 	turnToFindObstacle(usL,R);
 
-	while(!(analogRead(phtRl)<limen && analogRead(phtLr)<limen)){
+	//左右内側のセンサのどちらも黒を読んでいないとき
+	while(analogRead(phtRl)>=limen && analogRead(phtLr)>=limen){
+		//左のセンサで計測した距離を取得
 		double disL = usL.getDistance();
 		if(disL<=13 && disL>=7){
 			MOVE(50,50);
@@ -37,6 +48,9 @@ void dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor u
 
 	rightangleBasedOnLine(R);
 
+}
+
+void rightangleBasedOnLine(enum direction direction){
 }
 
 /*pid制御によるライントレース関数
@@ -79,6 +93,7 @@ void pid(){
 
 enum phase judgePhase(ultraSonicSensor usF){
 
+	//フォトリフレクタの測定値を格納しておく関数
 	int valLl = analogRead(phtLl);
 	int valLr = analogRead(phtLr);
 	int valC = analogRead(phtC);
@@ -86,36 +101,52 @@ enum phase judgePhase(ultraSonicSensor usF){
 	int valRr = analogRead(phtRr);
 	double dis = usF.getDistance();
 
+	//どちらか方側のフォトリフレクタ二つが黒なら
 	if((valLl<limen && valLr<limen)||(valRl<limen && valRr<limen)){
 
+		//緑色の位置を取得
 		direction greenPosition = checkGreen();
 
+		//右側だけに緑があれば右に曲がる関数へ
 		if(greenPosition==R){
 			return rightangleR;
+			//左側だけに緑があれば左に曲がる関数へ
 		}else if(greenPosition==L){
 			return rightangleL;
+			//両側に緑があればUターンする関数へ
 		}else if(greenPosition==bothSides){
 			return rightangleR;
+			//緑がないなら
 		}else{
+			//中央のフォトリフレクタが黒、すなわち線が正面にも続いているなら
 			if(valC<limen){
+				//交差点を通り過ぎる関数へ
 				return passOver;
+				//中央ののフォトリフレクタが白、すなわちただの直角なら
 			}else{
+				//右側が黒のとき
 				if(valRl<limen&&valRr<limen){
+					//右に曲がる関数へ
 					return rightangleR;
+					//左側が黒のとき
 				}else{
+					//左に曲がる関数へ
 					return rightangleL;
+				}
 			}
 		}
-	}
 
+	//正面の超音波センサの取得した距離が一定値以内なら障害物を回避する関数へ
 	}else if(dis<=13 && dis>=7){
 
 		return obstacle;
 
+	//すべてのフォトリフレクタが白なら線を探索する関数へ
 	}else if(valLl>=limen && valLr>=limen && valC>=limen && valRl>=limen && valRr>=limen){
 
 		return white;
 
+	//上のどれにも当てはまらない場合ライントレースをする関数へ
 	}else {
 
 		return Trace;
@@ -125,3 +156,7 @@ enum phase judgePhase(ultraSonicSensor usF){
 
 void searchLine(){
 }
+
+void passOverLine(){
+}
+
