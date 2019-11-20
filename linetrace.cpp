@@ -1,8 +1,12 @@
 #include"lineTrace.h"
 
-void lineTrace::turnToFindObstacle(ultraSonicSensor us,enum direction direction){
-	double Dis = us.getDistance();
-	while(Dis > 13 || Dis < 7){
+//超音波センサのオブジェクトと旋回の方向を引数に取った関数。その超音波センサが適切な値を読み取るまで指定した方向へ旋回し続ける
+void turnToFindObstacle(ultraSonicSensor us,enum direction direction){
+	//超音波センサの値を取って距離を初期化
+	double dis = us.getDistance();
+	//超音波センサの値が一定範囲内でないあいだずっと
+	while(dis > 13 || dis < 7){
+		//directionに応じた方向に旋回する
 		switch(direction){
 			case R:
 				MOVE(50, -50);
@@ -10,17 +14,24 @@ void lineTrace::turnToFindObstacle(ultraSonicSensor us,enum direction direction)
 			case L:
 				MOVE(-50,50);
 				break;
+			default:
+				break;
 		}
 		delay(5);
-		Dis = us.getDistance();
+		//距離を更新
+		dis = us.getDistance();
 	}
 }
 
-void lineTrace::dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
+//障害物回避関数.超音波センサのオブジェクトを引数にとる
+void dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
 
+	//左側に障害物が見つかるまで右へ旋回
 	turnToFindObstacle(usL,R);
 
-	while(!(analogRead(phtRl)<limen && analogRead(phtLr)<limen)){
+	//左右内側のセンサのどちらも黒を読んでいないとき
+	while(analogRead(phtRl)>=limen && analogRead(phtLr)>=limen){
+		//左のセンサで計測した距離を取得
 		double disL = usL.getDistance();
 		if(disL<=13 && disL>=7){
 			MOVE(50,50);
@@ -39,14 +50,13 @@ void lineTrace::dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSo
 
 }
 
-//コンストラクタの定義
-lineTrace::lineTrace(int limen0,int basicMotorPower0,double Kp0,double Ki0,double Kd0):limen(limen0),basicMotorPower(basicMotorPower0),Kp(Kp0),Ki(Ki0),Kd(Kd0){
+void rightangleBasedOnLine(enum direction direction){
 }
 
 /*pid制御によるライントレース関数
  * ラインを挟んだ二つのフォトリフレクタの読み取り値同士の差が0であるときをラインが機体中央にあるときと想定し、差(diff)=0を目標値としてpid制御を行う*/
 
-void lineTrace::pid(){
+void pid(){
 	int diff,propotial,integral,differential,Lpower,Rpower;
 	char str[254];
 	static int previous_diff = 0;
@@ -81,48 +91,72 @@ void lineTrace::pid(){
 	delay(5);
 }
 
-enum phase lineTrace::judgePhase(ultraSonicSensor usF){
+enum phase judgePhase(ultraSonicSensor usF){
 
+	//フォトリフレクタの測定値を格納しておく関数
 	int valLl = analogRead(phtLl);
 	int valLr = analogRead(phtLr);
 	int valC = analogRead(phtC);
 	int valRl = analogRead(phtRl);
 	int valRr = analogRead(phtRr);
-	double Dis = usF.getDistance();
+	double dis = usF.getDistance();
 
+	//どちらか方側のフォトリフレクタ二つが黒なら
 	if((valLl<limen && valLr<limen)||(valRl<limen && valRr<limen)){
 
+		//緑色の位置を取得
 		direction greenPosition = checkGreen();
 
+		//右側だけに緑があれば右に曲がる関数へ
 		if(greenPosition==R){
 			return rightangleR;
+			//左側だけに緑があれば左に曲がる関数へ
 		}else if(greenPosition==L){
 			return rightangleL;
+			//両側に緑があればUターンする関数へ
 		}else if(greenPosition==bothSides){
 			return rightangleR;
+			//緑がないなら
 		}else{
-			if(varC<limen){
+			//中央のフォトリフレクタが黒、すなわち線が正面にも続いているなら
+			if(valC<limen){
+				//交差点を通り過ぎる関数へ
 				return passOver;
+				//中央ののフォトリフレクタが白、すなわちただの直角なら
 			}else{
+				//右側が黒のとき
 				if(valRl<limen&&valRr<limen){
+					//右に曲がる関数へ
 					return rightangleR;
+					//左側が黒のとき
 				}else{
+					//左に曲がる関数へ
 					return rightangleL;
+				}
 			}
 		}
-	}
 
+	//正面の超音波センサの取得した距離が一定値以内なら障害物を回避する関数へ
 	}else if(dis<=13 && dis>=7){
 
 		return obstacle;
 
+	//すべてのフォトリフレクタが白なら線を探索する関数へ
 	}else if(valLl>=limen && valLr>=limen && valC>=limen && valRl>=limen && valRr>=limen){
 
 		return white;
 
+	//上のどれにも当てはまらない場合ライントレースをする関数へ
 	}else {
 
 		return Trace;
 
 	}
 }
+
+void searchLine(){
+}
+
+void passOverLine(){
+}
+

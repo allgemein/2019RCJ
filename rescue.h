@@ -13,3 +13,4 @@ void rescue_setup();
 void find_ball();
 void pic_up_ball();
 void find_triangle_and_drop_ball ();
+void rescue();

@@ -1,8 +1,8 @@
 #pragma once
 
-//caseを文字で記述するためのenumを定義
+//caseを文字で記述するためのenum(数字代わりの文字)を定義
 enum phase{
-	rescue,
+	startRescue,
 	rightangleR,
 	rightangleL,
 	obstacle,

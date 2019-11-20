@@ -4,6 +4,8 @@
 #include"lineTrace.h"
 #include"constant.h"
 #include"MPU9250.h"
+#include"rescue.h"
+#include"TCS34725.h"
 
 void setup(){
 	Serial.begin(9600);
@@ -24,29 +26,29 @@ void setup(){
 ultraSonicSensor usR(echoR,trigR);
 ultraSonicSensor usL(echoL,trigL);
 ultraSonicSensor usF(echoF,trigF);
-//ライントレース用のインスタンス作成
-lineTrace tracer(500,150,0.05,0.02,0.02);
 
 void loop(){
 	//judgePhaseで判定した状況に応じて関数を実行
-	switch (tracer.judgePhase()){
-		case rescue:
-			tracer.rescue();
+	switch (judgePhase(usF)){
+		case startRescue:
+			rescue();
 			break;
 		case rightangleR:
-			tracer.rightangleBasedOnLine();
+			rightangleBasedOnLine(R);
 			break;
 		case rightangleL:
-			tracer.rightangleBasedOnLine();
+			rightangleBasedOnLine(L);
 			break;
+		case passOver:
+			passOverLine();
 		case obstacle:
-			tracer.dodge_movement();;
+			dodge_movement(usR,usF,usL);
 			break;
 		case white:
-			tracer.searchLine();
+			searchLine();
 			break;
 		default:
-			tracer.pid();
+			pid();
 			break;
 	}
 } 
