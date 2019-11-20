@@ -18,10 +18,11 @@
 #include"rescue.h"
 
 //壁まで進んで角まで後進するプログラム
-void rescue_setup(){
+void rescue_setup(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
+
     float minDisL = 0;
-    move_to_wall(ultraSonicSensor usF);
-    localozation_wall(ultraSonicSensor usL);
+    move_to_wall(usF);
+    localozation_wall(usL);
 
     while (!(usF.getDistance() <= machine_size )){
         MOVE(50, 50);
@@ -31,7 +32,7 @@ void rescue_setup(){
     MOVE(-50,-50);
     delay(300);
 
-    for(int time = 0; time <= 60; time=time+1){
+    for(int time = 0; time <= 60; time++){
         MOVE(50,-50);
         if (minDisL > usL.getDistance()){
             minDisL = usL.getDistance();
@@ -39,7 +40,7 @@ void rescue_setup(){
         delay(500);
     }
 
-    while(!(usL.getDistance() = minDisL)){
+    while(!(usL.getDistance() == minDisL)){
         MOVE(-50,50);
         delay(5);
     }
@@ -48,18 +49,18 @@ void rescue_setup(){
 
     MOVE(-50,-50);
     delay(sec);
-    find_ball();
+    find_ball(usL,usF,usR);
 }
 
 //ボールが見つかるまでコース内を走行するプログラム
-void find_ball(){
+void find_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
 
     float minDisL = 100;
-    localozation_wallL(ultraSonicSensor usL);
-    localozation_wallR(ultraSonicSensor usR);
+    localozation_wall(usL);
+    localozation_wall(usR);
 
-    while(){    //ここにボールを持ってるかどうか判別する式を入れる//
-        for(int time = 0; time <= 60; time=time+1){ //入口から見て右
+    while(false/*仮に真理値を入れただけです*/){    //ここにボールを持ってるかどうか判別する式を入れる//
+        for(int time = 0; time <= 60; time++){ //入口から見て右
             MOVE(50,-50);
             if (minDisL > usL.getDistance()){
                 minDisL = usL.getDistance();
@@ -67,7 +68,7 @@ void find_ball(){
             delay(500);
         }
 
-        while(!(usL.getDistance() = minDisL)){
+        while(!(usL.getDistance() == minDisL)){
             MOVE(-50,50);
             delay(5);
         }
@@ -84,7 +85,7 @@ void find_ball(){
             delay(500);
         }
 
-        while(!(usF.getDistance() = minDisF)){
+        while(!(usF.getDistance() == minDisF)){
             MOVE(-50,50);
             delay(5);
         }
@@ -102,14 +103,14 @@ void find_ball(){
             delay(500);
         }
 
-        while(!(usL.getDistance() = minDisL)){
+        while(!(usL.getDistance() == minDisL)){
             MOVE(50,-50);
             delay(5);
         }
 
         MOVE(-50,-50);
-        delay(change_line);
-        float minDisF = 100;
+	delay(change_line);
+        minDisF = 100;
 
         for(int time = 0; time <= 60; time=time+1){ 
             MOVE(-50,50);
@@ -119,7 +120,7 @@ void find_ball(){
             delay(500);
         }
 
-        while(!(usF.getDistance() = minDisF)){
+        while(!(usF.getDistance() == minDisF)){
             MOVE(50,-50);
             delay(5);
         }
