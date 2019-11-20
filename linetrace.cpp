@@ -187,17 +187,22 @@ enum phase judgePhase(ultraSonicSensor usF){
 
 void searchLine(){
 
+	//黒い線を見つけるか100ms経過するまで前進する。黒い線を見つけたら関数の処理を終了
 	if(moveUntilLineFound(F,500)) return;
 
 	while(1){
 
+	//黒い線を見つけるか100ms経過するまで右へ旋回する。黒い線を見つけたら関数の処理を終了
 		if(moveUntilLineFound(R,100)) return;
+	//黒い線を見つけるか200ms経過するまで左へ旋回する。黒い線を見つけたら関数の処理を終了 
 		if(moveUntilLineFound(L,200)) return;
+	//黒い線を見つけるか100ms経過するまで前進する。黒い線を見つけたら関数の処理を終了
 		if(moveUntilLineFound(F,100)) return;
 	}
 }
 
 void passOverLine(){
+	//中央右と左のセンサが白を読むまで前進
 	while(analogRead(phtLr)<limen||analogRead(phtRl)<limen){
 		MOVE(100,100);
 		delay(5);
@@ -205,7 +210,8 @@ void passOverLine(){
 }
 
 bool moveUntilLineFound(enum direction direction,int delaymSecond){
-
+	
+	//delaymSecondミリ秒間directionに応じて前進または旋回する
 	for(int i=0;i<delaymSecond;i++){
 		switch(direction){
 			case R:
@@ -222,6 +228,7 @@ bool moveUntilLineFound(enum direction direction,int delaymSecond){
 		}
 		delay(1);
 
+		//黒い線を見つけたらtrueを返して処理を終了する
 		if(analogRead(phtLl)<limen) return true;
 		if(analogRead(phtLr)<limen) return true;
 		if(analogRead(phtC)<limen) return true;
@@ -229,6 +236,7 @@ bool moveUntilLineFound(enum direction direction,int delaymSecond){
 		if(analogRead(phtRr)<limen) return true;
 	}
 
+	//delaymSecond秒前進または旋回しても黒い線が見つからなかったらfalseを返して処理を終了する
 	return false;
 
 }
