@@ -9,6 +9,7 @@
 
 void setup(){
 	Serial.begin(9600);
+	/*
 	Wire.begin();
 	i2cWireByte(MPU9250_ADDRESS, PWR_MGMT_1, 0x00);
 	i2cWireByte(MPU9250_ADDRESS, ACCEL_CONFIG, ACCEL_FS_SEL_16G);
@@ -19,7 +20,7 @@ void setup(){
 	i2cWireByte(AK8963_ADDRESS, CNTL1, CNTL1_MODE_SEL_100HZ);
 
 	MPU9250set();
-
+	*/
 }
 
 //超音波センサのインスタンス作成
@@ -34,20 +35,27 @@ void loop(){
 			rescue();
 			break;
 		case rightangleR:
+			Serial.println("rightangleR");
 			rightangleBasedOnLine(R);
 			break;
 		case rightangleL:
+			Serial.println("rightangleL");
 			rightangleBasedOnLine(L);
 			break;
 		case passOver:
+			Serial.println("passOver");
 			passOverLine();
+			break;
 		case obstacle:
+			Serial.println("obstacle");
 			dodge_movement(usR,usF,usL);
 			break;
 		case white:
+			Serial.println("white");
 			searchLine();
 			break;
 		default:
+			Serial.println("lineTrace");
 			pid();
 			break;
 	}

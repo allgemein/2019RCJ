@@ -51,49 +51,80 @@ void dodge_movement(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor u
 }
 
 void rightangleBasedOnLine(enum direction direction){
+	switch(direction){
+		case R:
+			MOVE(100,-100);
+			break;
+		case L:
+			MOVE(-100,100);
+			break;
+		default:
+			break;
+	}
+
+	delay(200);
+
+	while(analogRead(phtC)>=limen){
+		switch(direction){
+			case R:
+				MOVE(100,-100);
+				break;
+			case L:
+				MOVE(-100,100);
+				break;
+			default:
+				break;
+
+		}
+
+		delay(5);
+
+	}
 }
 
-/*pid制御によるライントレース関数
- * ラインを挟んだ二つのフォトリフレクタの読み取り値同士の差が0であるときをラインが機体中央にあるときと想定し、差(diff)=0を目標値としてpid制御を行う*/
+	/*pid制御によるライントレース関数
+	 * ラインを挟んだ二つのフォトリフレクタの読み取り値同士の差が0であるときをラインが機体中央にあるときと想定し、差(diff)=0を目標値としてpid制御を行う*/
 
-void pid(){
-	int diff,propotial,integral,differential,Lpower,Rpower;
-	char str[254];
-	static int previous_diff = 0;
-	static int previous_diff2 = 0;
+	void pid(){
+		int diff,propotial,integral,differential,Lpower,Rpower;
+		char str[254];
+		static int previous_diff = 0;
+		static int previous_diff2 = 0;
 
-	//左右のセンサ値の差を取る
-	diff = analogRead(phtLr)-analogRead(phtRl);
 
-	//目標値との偏差にゲインをかける(比例項)
-	propotial = Kp*diff;
-	//今回の偏差と前回の偏差との差にゲインをかける(積分項)
-	integral = Ki*(diff-previous_diff);
-	//今回の偏差-前回の偏差から前回の偏差-前々回の偏差を引き(変化がどのくらい急か?)、その値にゲインをかける(微分項)
-	differential = Kd*((diff-previous_diff)-(previous_diff-previous_diff2));
 
-	//上の三項をまとめた上で前進するために多少の値(basicMotorPower)を加える
-	Lpower = basicMotorPower+(propotial+integral+differential);
-	Rpower = basicMotorPower-(propotial+integral+differential);
+		//左右のセンサ値の差を取る
+		diff = analogRead(phtLr)-analogRead(phtRl);
 
-	//上で計算した値をモータに出力
-	MOVE(Lpower,Rpower);
+		//目標値との偏差にゲインをかける(比例項)
+		propotial = Kp*diff;
+		//今回の偏差と前回の偏差との差にゲインをかける(積分項)
+		integral = Ki*(diff-previous_diff);
+		//今回の偏差-前回の偏差から前回の偏差-前々回の偏差を引き(変化がどのくらい急か?)、その値にゲインをかける(微分項)
+		differential = Kd*((diff-previous_diff)-(previous_diff-previous_diff2));
 
-	//今回の偏差を前回の偏差を格納する変数へ、前回の偏差を前々回の偏差を格納する変数へ、それぞれ移す
-	previous_diff2 = previous_diff;
-	previous_diff = diff;
+		//上の三項をまとめた上で前進するために多少の値(basicMotorPower)を加える
+		Lpower = basicMotorPower+(propotial+integral+differential);
+		Rpower = basicMotorPower-(propotial+integral+differential);
 
-	//出力値を表示
-	sprintf(str,"power: %4d%4d",Lpower,Rpower);
+		//上で計算した値をモータに出力
+		MOVE(Lpower,Rpower);
 
-	Serial.println(str);
+		//今回の偏差を前回の偏差を格納する変数へ、前回の偏差を前々回の偏差を格納する変数へ、それぞれ移す
+		previous_diff2 = previous_diff;
+		previous_diff = diff;
 
-	delay(5);
-}
+		//出力値を表示
+		sprintf(str,"power: %4d%4d",Lpower,Rpower);
+
+		Serial.println(str);
+
+		delay(5);
+	}
 
 enum phase judgePhase(ultraSonicSensor usF){
 
-	//フォトリフレクタの測定値を格納しておく関数
+	//フォトリフレクタと超音波センサの測定値を格納しておく変数
 	int valLl = analogRead(phtLl);
 	int valLr = analogRead(phtLr);
 	int valC = analogRead(phtC);
@@ -136,17 +167,17 @@ enum phase judgePhase(ultraSonicSensor usF){
 			}
 		}
 
-	//正面の超音波センサの取得した距離が一定値以内なら障害物を回避する関数へ
+		//正面の超音波センサの取得した距離が一定値以内なら障害物を回避する関数へ
 	}else if(dis<=13 && dis>=7){
 
 		return obstacle;
 
-	//すべてのフォトリフレクタが白なら線を探索する関数へ
+		//すべてのフォトリフレクタが白なら線を探索する関数へ
 	}else if(valLl>=limen && valLr>=limen && valC>=limen && valRl>=limen && valRr>=limen){
 
 		return white;
 
-	//上のどれにも当てはまらない場合ライントレースをする関数へ
+		//上のどれにも当てはまらない場合ライントレースをする関数へ
 	}else {
 
 		return Trace;
@@ -155,8 +186,49 @@ enum phase judgePhase(ultraSonicSensor usF){
 }
 
 void searchLine(){
+
+	if(moveUntilLineFound(F,500)) return;
+
+	while(1){
+
+		if(moveUntilLineFound(R,100)) return;
+		if(moveUntilLineFound(L,200)) return;
+		if(moveUntilLineFound(F,100)) return;
+	}
 }
 
 void passOverLine(){
+	while(analogRead(phtLr)<limen||analogRead(phtRl)<limen){
+		MOVE(100,100);
+		delay(5);
+	}
 }
 
+bool moveUntilLineFound(enum direction direction,int delaymSecond){
+
+	for(int i=0;i<delaymSecond;i++){
+		switch(direction){
+			case R:
+				MOVE(100,-100);
+				break;
+			case L:
+				MOVE(-100,100);
+				break;
+			case F:
+				MOVE(100,100);
+				break;
+			default:
+				break;
+		}
+		delay(1);
+
+		if(analogRead(phtLl)<limen) return true;
+		if(analogRead(phtLr)<limen) return true;
+		if(analogRead(phtC)<limen) return true;
+		if(analogRead(phtRl)<limen) return true;
+		if(analogRead(phtRr)<limen) return true;
+	}
+
+	return false;
+
+}

@@ -1,4 +1,4 @@
-#include"MPU9250.h"
+/*#include"MPU9250.h"
 
 void MPU9250set(){
   i2cRead(MPU9250_ADDRESS, 0x3b, 14, accGyroTempData);
@@ -92,3 +92,4 @@ void i2cWireByte(uint8_t Address, uint8_t Register, volatile uint8_t Data){
   Wire.write(Data);
   Wire.endTransmission();
 }
+*/

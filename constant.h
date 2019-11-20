@@ -14,6 +14,7 @@ enum phase{
 enum direction{
 	R,
 	L,
+	F,
 	bothSides,
 	nothing
 };

@@ -1,4 +1,5 @@
 #pragma once
+/*
 #include <Wire.h>
 
 #define MPU9250_ADDRESS 0x68
@@ -87,3 +88,4 @@ void MPU9250set();
 void MPU9250();
 void i2cRead(uint8_t Address, uint8_t Register, uint8_t NBytes, volatile uint8_t*Data);
 void i2cWireByte(uint8_t Address, uint8_t Register, volatile uint8_t Data);
+*/
