@@ -20,7 +20,7 @@ double ultraSonicSensor::getDistance(){
 	delayMicroseconds(10);
 	digitalWrite(triger,LOW);
 	//反射した超音波がechoピンに検知されるまでの時間を計測
-	duration=pulseIn(echo,HIGH);
+	duration=pulseIn(echo,HIGH,1000);
 	//計算して距離(cm)に変換
 	distance=(duration*340*100)/2000000.0;
 	return distance;

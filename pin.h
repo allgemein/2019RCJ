@@ -2,10 +2,10 @@
 #include<Arduino.h>
 
 //ピン番号を定義するヘッダファイル
-const int normalPinR= 4;
-const int reversePinR = 3;
-const int normalPinL = 7;
-const int reversePinL = 6;
+const int normalPinR= 7;
+const int reversePinR = 6;
+const int normalPinL = 3;
+const int reversePinL = 4;
 
 //センサ類のピン番号
 const int trigR = 36;

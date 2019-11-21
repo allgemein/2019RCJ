@@ -7,6 +7,20 @@
 #include"rescue.h"
 #include"TCS34725.h"
 
+void debug_pht(){//フォトリフレクタの読み取り値をシリアルモニタに表示する関数
+	char str[124];
+
+	int valLl = analogRead(phtLl);
+	int valLr = analogRead(phtLr);
+	int valC = analogRead(phtC);
+	int valRl = analogRead(phtRl);
+	int valRr = analogRead(phtRr);
+
+	sprintf(str,"  pht: %4d%4d%4d%4d%4d",valLl,valLr,valC,valRl,valRr);
+	Serial.println(str);
+
+}
+
 void setup(){
 	Serial.begin(9600);
 	/*
@@ -31,9 +45,9 @@ ultraSonicSensor usF(echoF,trigF);
 void loop(){
 	//judgePhaseで判定した状況に応じて関数を実行
 	switch (judgePhase(usF)){
-		case startRescue:
-			rescue();
-			break;
+		//case startRescue:
+		//	rescue();
+		//	break;
 		case rightangleR:
 			Serial.println("rightangleR");
 			rightangleBasedOnLine(R);
@@ -46,10 +60,10 @@ void loop(){
 			Serial.println("passOver");
 			passOverLine();
 			break;
-		case obstacle:
-			Serial.println("obstacle");
-			dodge_movement(usR,usF,usL);
-			break;
+		//case obstacle:
+		//	Serial.println("obstacle");
+		//	dodge_movement(usR,usF,usL);
+		//	break;
 		case white:
 			Serial.println("white");
 			searchLine();
@@ -59,4 +73,5 @@ void loop(){
 			pid();
 			break;
 	}
+	//debug_pht();
 } 
