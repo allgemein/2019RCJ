@@ -23,7 +23,6 @@ float DisL = 0;
 float DisR = 0;
 
 Servo arm_servo;
-arm_servo.attach(arm_servo_pin);
 
 void localozation_wall(ultraSonicSensor usL);
 void rescue_setup(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR);

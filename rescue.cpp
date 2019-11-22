@@ -17,6 +17,10 @@
 
 #include"rescue.h"
 
+void setup(){
+    arm_servo.attach(arm_servo_pin);
+}
+
 //壁まで進んで角まで後進するプログラム
 void rescue_setup(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
     
@@ -138,31 +142,45 @@ void find_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
 //ボールが見つかったら回収するプログラム
 void pic_up_ball(){
     arm_servo.attach(arm_close);
+    delay(10000);
     find_triangle_and_drop_ball();
 }
 
 //ボールを持ってるのを確認出来たら三角コーナーを探してボールを落とすプログラム
-void find_triangle_and_drop_ball(){
-    while(disF > 7){
+void find_triangle_and_drop_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
+    //壁まで移動
+    while(usF.getDistance() > 7){
         MOVE(50,50);
     }    
+
     //ここから右回りに角を探す作業
-    minDisL = 100;
+    while(1){
 
-    for(int time = 0; time <= 60; time++){ 
-        MOVE(50,-50);
+        float minDisR = 100;
+
+        for(int time = 0; time <= 60; time++){ 
+            MOVE(50,-50);
             
-        if (minDisL > usL.getDistance()){
-            minDisL = usL.getDistance();
+            if (minDisR > usR.getDistance()){
+               minDisR = usR.getDistance();
+            }
+            delay(500);
         }
-        delay(500);
+
+        while(!(usR.getDistance() == minDisR)){
+            MOVE(-50,50);
+            delay(5);
+        }
+
+        MOVE(-50,-50);
+        delay(sec);
+
+        if(usR.getDistance() >= minDisR + 2){
+            arm_servo.write(arm_close);
+            break;
+        }
+
     }
 
-    while(!(usL.getDistance() == minDisL)){
-        MOVE(-50,50);
-        delay(5);
-    }
-
-    usR.getDistance() = DisR
     
 }
