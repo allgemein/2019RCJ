@@ -17,42 +17,49 @@
 
 #include"rescue.h"
 
-void setup(){
+float DisL = 0;
+float DisR = 0;
+
+float minDisL = 100;
+float minDisR = 100;
+
+Servo arm_servo;
+
+void setUpServo(){
     arm_servo.attach(arm_servo_pin);
 }
 
 //壁まで進んで角まで後進するプログラム
 void rescue_setup(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
     
-    float minDisL = 0;
     move_to_wall(usF);  
     localozation_wall(usL);
 
     while (!(usF.getDistance() <= machine_size )){
-        MOVE(50, 50);
+        MOVE(100,100);
         delay(5);
     }
 
-    MOVE(-50,-50);
+    MOVE(-100,-100);
     delay(300);
 
-    for(int time = 0; time <= 60; time++){
-        MOVE(50,-50);
+    for(int time = 0; time <= 50; time++){
+        MOVE(100,-100);
         if (minDisL > usL.getDistance()){
             minDisL = usL.getDistance();
         }
-        delay(500);
+        delay(100);
     }
 
     while(!(usL.getDistance() == minDisL)){
-        MOVE(-50,50);
+        MOVE(-100,100);
         delay(5);
     }
 
     arm_servo.write(arm_open);
     delay(3000);
 
-    MOVE(-50,-50);
+    MOVE(-100,-100);
     delay(sec);
     find_ball(usL,usF,usR);
 }
@@ -60,83 +67,87 @@ void rescue_setup(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR
 //ボールが見つかるまでコース内を走行するプログラム
 void find_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
 
-    float minDisL = 100;
     localozation_wall(usL);
     localozation_wall(usR);
 
-    while(false/*仮に真理値を入れただけです*/){    //ここにボールを持ってるかどうか判別する式を入れる//
-        for(int time = 0; time <= 60; time++){ //入口から見て右
-            MOVE(50,-50);
+    while(1){
+    
+        minDisL = 100;
+        for(int time = 0; time <= 50; time++){ //入口から見て右
+            MOVE(100,-100);
             if (minDisL > usL.getDistance()){
                 minDisL = usL.getDistance();
             }
-            delay(500);
+            delay(100);
         }
 
         while(!(usL.getDistance() == minDisL)){
-            MOVE(-50,50);
+            MOVE(-100,10);
             delay(5);
         }
 
-        MOVE(-50,-50);
+        MOVE(-100,-100);
         delay(change_line);
         float minDisF = 100;
 
-        for(int time = 0; time <= 60; time=time+1){ 
+        for(int time = 0; time <= 50; time=time+1){ 
             MOVE(50,-50);
             if (minDisF > usF.getDistance()){
                 minDisF = usF.getDistance();
             }
-            delay(500);
+            delay(100);
         }
 
         while(!(usF.getDistance() == minDisF)){
-            MOVE(-50,50);
+            MOVE(-100,100);
             delay(5);
         }
 
         MOVE(-100,-100);
         delay(sec);
 
-        //ここにボールが合ったらpic_up_ballに移る動作を入れる//
-
-        for(int time = 0; time <= 60; time=time+1){ //入口から見て左で回るやつ
-            MOVE(-50,50);
+        if(analogRead(photoBall) > exsist_ball){
+            pic_up_ball();
+        }
+        
+        minDisL = 100;
+        for(int time = 0; time <= 50; time=time+1){ //入口から見て左で回るやつ
+            MOVE(-100,100);
             if (minDisL > usR.getDistance()){
                 minDisL = usR.getDistance();
             }
-            delay(500);
+            delay(100);
         }
 
         while(!(usL.getDistance() == minDisL)){
-            MOVE(50,-50);
+            MOVE(100,-100);
             delay(5);
         }
 
-        MOVE(-50,-50);
-	delay(change_line);
+        MOVE(-100,-100);
+	    delay(change_line);
         minDisF = 100;
 
-        for(int time = 0; time <= 60; time=time+1){ 
-            MOVE(-50,50);
+        for(int time = 0; time <= 50; time=time+1){ 
+            MOVE(-100,100);
             if (minDisF > usF.getDistance()){
                 minDisF = usF.getDistance();
             }
-            delay(500);
+            delay(100);
         }
 
         while(!(usF.getDistance() == minDisF)){
-            MOVE(50,-50);
+            MOVE(100,-100);
             delay(5);
         }
 
         MOVE(-100,-100);
         delay(sec);
 
-        //ここにボールが合ったらpic_up_ballに移る動作を入れる//
-
+        if(analogRead(photoBall) > exsist_ball){
+            pic_up_ball();
+        }
     }
-
 }
 
 //ボールが見つかったら回収するプログラム
@@ -150,29 +161,29 @@ void pic_up_ball(){
 void find_triangle_and_drop_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
     //壁まで移動
     while(usF.getDistance() > 7){
-        MOVE(50,50);
+        MOVE(100,100);
     }    
 
     //ここから右回りに角を探す作業
     while(1){
 
-        float minDisR = 100;
+        minDisR = 100;
 
-        for(int time = 0; time <= 60; time++){ 
-            MOVE(50,-50);
+        for(int time = 0; time <= 50; time++){ 
+            MOVE(100,-100);
             
             if (minDisR > usR.getDistance()){
                minDisR = usR.getDistance();
             }
-            delay(500);
+            delay(100);
         }
 
         while(!(usR.getDistance() == minDisR)){
-            MOVE(-50,50);
+            MOVE(-100,100);
             delay(5);
         }
 
-        MOVE(-50,-50);
+        MOVE(-100,-100);
         delay(sec);
 
         if(usR.getDistance() >= minDisR + 2){

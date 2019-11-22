@@ -19,3 +19,4 @@ const int phtRl = A10;
 const int phtLr = A3;
 const int phtLl = A4;
 const int phtC = A12;
+const int photoBall = A0;

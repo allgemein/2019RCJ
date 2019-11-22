@@ -35,6 +35,8 @@ void setup(){
 
 	MPU9250set();
 	*/
+	setUpServo();
+
 }
 
 //超音波センサのインスタンス作成
