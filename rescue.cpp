@@ -51,7 +51,7 @@ void rescue_setup(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR
         delay(100);
     }
 
-    while(!(usL.getDistance() == minDisL)){
+    while(!(round(usL.getDistance()) == round(minDisL))){
         MOVE(-100,100);
         delay(5);
     }
@@ -81,7 +81,7 @@ void find_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
             delay(100);
         }
 
-        while(!(usL.getDistance() == minDisL)){
+        while(!(round(usL.getDistance()) == round(minDisL))){
             MOVE(-100,10);
             delay(5);
         }
@@ -98,7 +98,7 @@ void find_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
             delay(100);
         }
 
-        while(!(usF.getDistance() == minDisF)){
+        while(!(round(usF.getDistance()) == round(minDisF))){
             MOVE(-100,100);
             delay(5);
         }
@@ -122,7 +122,7 @@ void find_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
             delay(100);
         }
 
-        while(!(usL.getDistance() == minDisL)){
+        while(!(round(usL.getDistance()) == round(minDisL))){
             MOVE(100,-100);
             delay(5);
         }
@@ -139,7 +139,7 @@ void find_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
             delay(100);
         }
 
-        while(!(usF.getDistance() == minDisF)){
+        while(!(round(usF.getDistance()) == round(minDisF))){
             MOVE(100,-100);
             delay(5);
         }
@@ -184,7 +184,7 @@ void find_triangle_and_drop_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultra
             delay(100);
         }
 
-        while(!(usR.getDistance() == minDisR)){
+        while(!(round(usR.getDistance()) == round(minDisR))){
             MOVE(-100,100);
             delay(5);
         }
