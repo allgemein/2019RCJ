@@ -107,7 +107,10 @@ void find_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
         delay(sec);
 
         if(analogRead(photoBall) > exsist_ball){
-            pic_up_ball();
+            delay(2000);
+            if(analogRead(photoBall) > exsist_ball){ 
+                pic_up_ball();
+            }
         }
         
         minDisL = 100;
@@ -145,7 +148,10 @@ void find_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultraSonicSensor usR){
         delay(sec);
 
         if(analogRead(photoBall) > exsist_ball){
-            pic_up_ball();
+            delay(2000);
+            if(analogRead(photoBall) > exsist_ball){ 
+                pic_up_ball();
+            }
         }
     }
 }
@@ -187,7 +193,7 @@ void find_triangle_and_drop_ball(ultraSonicSensor usL,ultraSonicSensor usF,ultra
         delay(sec);
 
         if(usR.getDistance() >= minDisR + 2){
-            arm_servo.write(arm_close);
+            arm_servo.write(arm_open);
             break;
         }
 
